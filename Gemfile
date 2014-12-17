@@ -8,6 +8,7 @@ gem 'react-rails', '~> 1.0.0.pre', github: 'reactjs/react-rails'
 gem 'therubyracer'
 gem 'slim'
 gem 'haml'
+gem 'turbolinks'
 
 group :test, :development do
   gem 'sqlite3'

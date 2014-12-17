@@ -1,5 +1,10 @@
 $base-color: #6C451B;
 
+html.turbolinks-progress-bar::before {
+  background-color: #0F72A3 !important;
+  height: 5px !important;
+}
+
 html, body {
   height: 100%;
 }
