@@ -1,0 +1,103 @@
+- title: GoでEnd To End Testingフレームワーク書いた
+  created_at: 2014-10-16T10:00:00Z
+  body: >
+    <p>SeleniumラッパーなテストフレームワークをGoで書いてみた。初Go。</p>
+    
+    <p><a href="https://github.com/hokaccha/sprinkler">https://github.com/hokaccha/sprinkler</a></p>
+    
+    <p>GoのコードでE2Eテストのコード書けてもあんまり嬉しくないのでYAMLで書けるようにした。</p>
+    <pre class="highlight text">scenarios:
+    - name: Hello sprinkler!
+      actions:
+      - visit: http://www.google.com
+      - assert_title: Google
+      - wait_for: input[type="text"]
+      - input:
+          element: input[type="text"]
+          value: Hello
+      - submit: form[name="f"]
+      - wait: 1000
+      - assert_text:
+          element: "#main"
+          contain: Hello
+    </pre>
+    <p>こんな感じのYAMLを以下のように実行すると</p>
+    <pre class="highlight text">$ sprinkler hello.yml
+    </pre>
+    <p>ブラウザが立ち上がってYAMLに書いたコマンドやアサーションを実行する。</p>
+    
+    <p><a href="https://github.com/hokaccha/sprinkler/tree/master/example">example</a>にある機能はひと通り動くものの、まだだいぶ機能たりない感じなんで地道に実装していく予定。</p>
+
+- title: HTML Importsで読み込まれたドキュメントからの相対パスを得る
+  created_at: 2014-07-11T12:30:00Z
+  body: >
+    <p><a href="https://github.com/hokaccha/x-sushiyuki">x-sushiyuki</a>というsushiyukiを表示するためのWebComponentsの要素を作ったんだけれども、importされたファイルからの相対パスでsushiyukiの画像パスを指定するのにちょっと苦戦した。</p>
+    
+    <p>たとえば、 /index.html から以下のように x-sushiyuki.html を呼び出す。</p>
+    <pre class="highlight html"><span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"import"</span> <span class="na">href=</span><span class="s">"bower_components/x-sushiyuki/x-sushiyuki.html"</span><span class="nt">&gt;</span>
+    </pre>
+    <p>この x-sushiyuki.html に CustomElement で<code>&lt;x-sushiyuki&gt;</code>を登録する処理などがかかれているので、 /index.html では次のように<code>&lt;x-sushiyuki&gt;</code>が使えるようになる。</p>
+    <pre class="highlight html"><span class="nt">&lt;x</span><span class="na">-sushiyuki</span> <span class="na">type=</span><span class="s">"uni"</span><span class="nt">&gt;</span>うに<span class="err">&lt;</span>/x-sushiyuki&gt;
+    </pre>
+    <p>このようなコンポーネントをbowerなどで配布することを考えると、sushiyukiの画像はこのコンポーネントに含めたい。そうすると当然画像のパスは x-sushiyuki.html からの相対パスで解決したい。（1、2個くらいの画像だったらbase64で埋め込んでもいいけどsushiyukiは数が多いのでつらい）</p>
+    
+    <p>普通に書くとこれが解決できない。例えば x-sushiyuki.html のほうで<code>img/uni.png</code>を<code>src</code>にした<code>img</code>要素をつくって<code>&lt;x-sushiyuki&gt;</code>のShadowDOMにappendしたとする。しかしこのShadowDOMが展開されるのは index.html のほうなので index.html からの相対パスで解決される。</p>
+    
+    <p>これを解決する方法がよくわからなかったのでなんとか無理矢理解決した方法を紹介する。</p>
+    
+    <p>まず x-sushiyuki.html のほうのscript要素の中では<code>document.currentScript</code>で自分自信のscript要素を取得できる（platform.jsでPolyfillする場合は<code>document._currentScript</code>）。</p>
+    
+    <p>次に<code>currentScript.ownerDocument</code>で自分自身の<code>document</code>を取得できる。そして<code>document</code>には<code>baseURI</code>というプロパティがあって、これで自分のドキュメントが参照されているURLが取れる。例えばこんな感じ。</p>
+    <pre class="highlight javascript"><span class="kd">var</span> <span class="nx">currentScript</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">_currentScript</span> <span class="o">||</span> <span class="nb">document</span><span class="p">.</span><span class="nx">currentScript</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">doc</span> <span class="o">=</span> <span class="nx">currentScript</span><span class="p">.</span><span class="nx">ownerDocument</span><span class="p">;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">doc</span><span class="p">.</span><span class="nx">baseURI</span><span class="p">);</span> <span class="c1">//=&gt; http://localhsot:8000/bower_components/x-sushiyuki/x-sushiyuki.html
+    </span></pre>
+    <p>あとはこのURLをパースして相対パスを取ればいい。こんな感じにした。</p>
+    <pre class="highlight javascript"><span class="kd">function</span> <span class="nx">getCwd</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">'a'</span><span class="p">);</span>
+      <span class="nx">a</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="nx">url</span><span class="p">;</span>
+    
+      <span class="kd">var</span> <span class="nx">origin</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">protocol</span> <span class="o">+</span> <span class="s1">'//'</span> <span class="o">+</span> <span class="nx">a</span><span class="p">.</span><span class="nx">host</span><span class="p">;</span> <span class="c1">// same as a.origin
+    </span>  <span class="kd">var</span> <span class="nx">pathname</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">pathname</span><span class="p">;</span>
+    
+      <span class="c1">// for IE10
+    </span>  <span class="k">if</span> <span class="p">(</span><span class="nx">pathname</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!==</span> <span class="s1">'/'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">pathname</span> <span class="o">=</span> <span class="s1">'/'</span> <span class="o">+</span> <span class="nx">pathname</span><span class="p">;</span>
+      <span class="p">}</span>
+    
+      <span class="k">return</span> <span class="nx">origin</span> <span class="o">+</span> <span class="nx">pathname</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\/[^\/]*$/</span><span class="p">,</span> <span class="s1">''</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="kd">var</span> <span class="nx">cwd</span> <span class="o">=</span> <span class="nx">getCwd</span><span class="p">(</span><span class="nx">doc</span><span class="p">.</span><span class="nx">baseURI</span><span class="p">);</span>
+    </pre>
+    <p><code>a</code>要素でURLをパースして自分のファイルのディレクトリ的なのを返す。originもくっつけてるのは別のオリジンからこのドキュメントが読み込まれた場合にも対応するため。HTML ImportsはCORSに対応していればクロスオリジンで読み込めるので、CDNから読み込むとかもできそう。</p>
+    
+    <p>後はこれに画像のパスをくっつければOK。</p>
+    <pre class="highlight javascript"><span class="nx">img</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">cwd</span> <span class="o">+</span> <span class="s1">'/img/'</span> <span class="o">+</span> <span class="nx">type</span> <span class="o">+</span> <span class="s1">'.png'</span><span class="p">;</span>
+    </pre>
+    <p>他にいい方法があれば知りたい所存。</p>
+
+- title: peco、ghq、gh-openの組み合わせが捗る
+  created_at: 2014-06-24T15:00:00Z
+  body: >
+    <p>それぞれのツールは以下を見ればどんなのかわかると思う。</p>
+    
+    <ul>
+    <li><a href="http://lestrrat.ldblog.jp/archives/39427929.html">peco（Simplistic interactive filtering tool）を作った話 : D-7 <altijd in="" beweging=""></altijd></a></li>
+    <li><a href="http://motemen.hatenablog.com/entry/2014/06/01/introducing-ghq">ghq: リモートリポジトリのローカルクローンをシンプルに管理する - 詩と創作・思索のひろば (Poetry, Writing and Contemplation)</a></li>
+    <li><a href="http://unknownplace.org/archives/gh-open.html">GitHubのレポジトリURLを開くgh-openコマンド - unknownplace.org</a></li>
+    </ul>
+    
+    <p>pecoとghqを組み合わせる例はpecoのREADMEにあるようにかなり強力で、ghqで管理しているリポジトリのディレクトリにcdしたりするのに便利。</p>
+    
+    <p>こんな感じ。</p>
+    <pre class="highlight text">$ cd $(ghq list -p | peco)
+    </pre>
+    <p>また、typester先生作のgh-openは指定したディレクトリのリポジトリをGitHubで開けるので、同じように使えばpecoでGitHubのURLを開ける。</p>
+    <pre class="highlight text">$ gh-open $(ghq list -p | peco)
+    </pre>
+    <p>こんな感じで適当にエイリアス作って使ってる。エイリアス名はだいぶ適当。</p>
+    <pre class="highlight text">alias g='cd $(ghq list -p | peco)'
+    alias gh='gh-open $(ghq list -p | peco)'
+    </pre>
+    <p>捗る。</p>

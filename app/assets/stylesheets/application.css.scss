@@ -1,0 +1,186 @@
+$base-color: #6C451B;
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+}
+
+.siteHeader {
+  border-top: 20px solid $base-color;
+  height: 140px;
+
+  .siteHeader-title {
+    text-align: center;
+    font-size: 40px;
+    font-weight: bold;
+    font-family: serif;
+    width: 600px;
+    margin: 0 auto;
+    padding: 30px 0;
+    border-bottom: 3px double #999;
+
+    a {
+      color: #666666;
+      text-decoration: none;
+    }
+  }
+}
+
+.siteContent {
+  padding: 20px;
+  width: 600px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  min-height: calc(100% - 220px);
+}
+
+.siteFooter {
+  background-color: $base-color;
+  color: #FFFFFF;
+  text-align: center;
+  font-style: italic;
+  font-size: 14px;
+  height: 60px;
+  line-height: 60px;
+
+  a {
+    color: #FFFFFF;
+  }
+}
+
+.postList {
+  margin: 0;
+  padding: 10px 10px 10px 25px;
+}
+
+.postListItem {
+  display: table-row;
+
+  .postListItem-date {
+    display: table-cell;
+    font-size: 14px;
+    color: #666;
+    padding-right: 20px;
+    padding: 10px 20px 10px 0;
+    white-space: nowrap;
+  }
+  .postListItem-title {
+    display: table-cell;
+  }
+}
+
+.postHead {
+  margin-bottom: 30px;
+
+  .postHead-title {
+    color: #297441;
+  }
+
+  .postHead-meta {
+    font-size: 14px;
+    color: #999;
+    text-align: right;
+
+    > a {
+      margin-left: 15px;
+      display: inline-block;
+      color: inherit;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.postBody {
+  border-bottom: 3px double #999;
+  padding-bottom: 30px;
+  margin-bottom: 30px;
+
+  pre {
+    padding: 10px;
+    border: 1px solid #CCC;
+    background-color: #EFEFEF;
+  }
+}
+
+.comments {
+  .comments-title {
+    color: #333;
+    font-size: 20px;
+    font-weight: normal;
+    margin: 20px 0;
+  }
+}
+
+.commentItem {
+  margin: 10px 0 20px;
+  padding: 10px;
+  background: #FAFAFA;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+  position: relative;
+  font-size: 14px;
+
+  .commentItem-title {
+    margin-bottom: 15px;
+    color: #297441;
+    font-size: 13px;
+    font-weight: bold;
+  }
+
+  .commentItem-date {
+    position: absolute;
+    right: 15px;
+    top: 13px;
+    font-size: 11px;
+    color: #666;
+  }
+
+  .commentItem-body {
+    white-space: pre-wrap;
+  }
+}
+
+.commentForm {
+  margin-top: 30px;
+
+  .commentForm-name, .commentForm-body {
+    padding: .5em .6em;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 3px #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    width: 400px;
+    font-size: 15px;
+  }
+
+  .commentForm-body {
+    height: 200px;
+  }
+}
+
+.btn {
+  font-family: inherit;
+  font-size: 100%;
+  padding: .5em 1em;
+  color: rgba(0,0,0,.8);
+  border: 0 rgba(0,0,0,0);
+  background-color: #E6E6E6;
+  text-decoration: none;
+  border-radius: 2px;
+  display: inline-block;
+  line-height: normal;
+  white-space: nowrap;
+  vertical-align: baseline;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+}
