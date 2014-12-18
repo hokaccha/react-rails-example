@@ -1,11 +1,11 @@
 var Posts = React.createClass({
   render: function() {
-    var item = this.props.posts.map(function(post) {
-      return <PostsItem key={post.id} post={post} />;
-    });
-
     return (
-      <ul className="postList">{item}</ul>
+      <ul className="postList">{
+        this.props.posts.map(function(post) {
+          return <PostsItem key={post.id} post={post} />;
+        })
+      }</ul>
     );
   }
 });
@@ -13,10 +13,11 @@ var Posts = React.createClass({
 var PostsItem = React.createClass({
   render: function() {
     var url = "/posts/" + this.props.post.id;
+    var date = Util.formatDate(this.props.post.created_at);
 
     return (
       <li className="postListItem">
-        <span className="postListItem-date">{Util.formatDate(this.props.post.created_at)}</span>
+        <span className="postListItem-date">{date}</span>
         <a href={url} className="postListItem-title">{this.props.post.title}</a>
       </li>
     );
