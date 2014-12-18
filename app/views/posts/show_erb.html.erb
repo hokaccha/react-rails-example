@@ -1,0 +1,30 @@
+<div class="post">
+  <div class="postHead">
+    <h2 class="postHead-title"><%= @post.title %></h2>
+    <div class="postHead-meta">
+      <span class="postHead-date"><%= @post.created_at.strftime '%Y-%m-%d %H:%M' %></span>
+      <a href="#comments" class="postHead-comments">コメント(<%= @post.comments.size %>)</a>
+    </div>
+  </div>
+  <div class="postBody"><%= raw @post.body %></div>
+
+  <div class="comments" id="comments">
+    <h2 class="comments-title">コメント</h2>
+    <div class="comments-list">
+      <% @post.comments.each do |comment| %>
+        <div class="commentItem">
+          <div class="commentItem-title"><%= comment.name %></div>
+          <div class="commentItem-date"><%= comment.created_at.strftime '%Y-%m-%d %H:%M' %></div>
+          <div class="commentItem-body"><%= comment.body %></div>
+        </div>
+      <% end %>
+    </div>
+    <div class="commentForm">
+      <form>
+        <p><input class="commentForm-name" type="text" placeholder="Your Name" /></p>
+        <p><textarea class="commentForm-body" placeholder="Your Comment"></textarea></p>
+        <p><input class="btn" type="submit" /></p>
+      </form>
+    </div>
+  </div>
+</div>

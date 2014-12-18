@@ -5,5 +5,9 @@ class PostsController < ApplicationController
 
   def show
     @post = Post.find params[:id]
+
+    #render 'show_erb'
+    #render 'show_haml'
+    #render 'show_slim'
   end
 end

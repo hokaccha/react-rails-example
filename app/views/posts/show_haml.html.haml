@@ -1,0 +1,24 @@
+.post
+  .postHead
+    %h2.postHead-title= @post.title
+    .postHead-meta
+      %span.postHead-date= @post.created_at.strftime '%Y-%m-%d %H:%M'
+      %a.postHead-comments{:href => "#comments"}
+        コメント(#{@post.comments.size})
+  .postBody= raw @post.body
+  #comments.comments
+    %h2.comments-title コメント
+    .comments-list
+      - @post.comments.each do |comment|
+        .commentItem
+          .commentItem-title= comment.name
+          .commentItem-date= comment.created_at.strftime '%Y-%m-%d %H:%M'
+          .commentItem-body= comment.body
+    .commentForm
+      %form
+        %p
+          %input.commentForm-name{:placeholder => "Your Name", :type => "text"}
+        %p
+          %textarea.commentForm-body{:placeholder => "Your Comment"}
+        %p
+          %input.btn{:type => "submit"}
