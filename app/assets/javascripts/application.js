@@ -1,3 +1,4 @@
+//= require turbolinks
 //= require common
 //= require jquery
 //= require react
@@ -14,3 +15,5 @@ $(function() {
     }
   });
 });
+
+Turbolinks.enableProgressBar();
