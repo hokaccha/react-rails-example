@@ -2,4 +2,4 @@
   post: @post,
   initialComments: @post.comments,
   commentPostUrl: post_comments_path(@post),
-}, { prerender: true }) %>
+}, { prerender: !turbolinks_request?  }) %>
