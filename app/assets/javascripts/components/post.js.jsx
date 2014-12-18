@@ -21,21 +21,38 @@ var Post = React.createClass({
   },
 
   render: function() {
-    var post = this.state.post;
+    var post = this.props.post;
+    var comments = this.state.comments;
 
     return (
       <div className="post">
-        <div className="postHead">
-          <h2 className="postHead-title">{this.props.post.title}</h2>
-          <div className="postHead-meta">
-            <span className="postHead-date">{Util.formatDateTime(this.props.post.created_at)}</span>
-            <a href="#comments" className="postHead-comments">コメント({this.state.comments.length})</a>
-          </div>
-        </div>
-        <div className="postBody" dangerouslySetInnerHTML={{__html: this.props.post.body}}/>
-        <Comments comments={this.state.comments} />
+        <PostHead title={post.title} created_at={post.created_at} commentLength={comments.length} />
+        <PostBody body={post.body} />
+        <Comments comments={comments} />
         <CommentForm onSubmit={this.handleSubmit} />
       </div>
+    );
+  }
+});
+
+var PostHead = React.createClass({
+  render: function() {
+    return (
+      <div className="postHead">
+        <h2 className="postHead-title">{this.props.title}</h2>
+        <div className="postHead-meta">
+          <span className="postHead-date">{Util.formatDateTime(this.props.created_at)}</span>
+          <a href="#comments" className="postHead-comments">コメント({this.props.commentLength})</a>
+        </div>
+      </div>
+    );
+  }
+});
+
+var PostBody = React.createClass({
+  render: function() {
+    return (
+      <div className="postBody" dangerouslySetInnerHTML={{__html: this.props.body}}/>
     );
   }
 });
