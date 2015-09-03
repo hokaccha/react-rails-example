@@ -1,19 +1,6 @@
-//= require turbolinks
-//= require common
-//= require jquery
-//= require react
-//= require react_ujs
-//= require_tree ./components
+//=require turbolinks
+//=require react_ujs
 
-$(function() {
-  $.ajaxSetup({
-    beforeSend: function(xhr) {
-      xhr.setRequestHeader(
-        'X-CSRF-Token',
-        $('meta[name="csrf-token"]').attr('content')
-      );
-    }
-  });
-});
-
+window.React = require('react');
+require('src/main');
 Turbolinks.enableProgressBar();

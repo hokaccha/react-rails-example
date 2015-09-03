@@ -1,0 +1,10 @@
+javascript:
+  vendor:
+    require:
+      - core-js
+      - react
+      - moment
+  application:
+    external:
+      - react
+      - moment

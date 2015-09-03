@@ -1,65 +1,69 @@
-var Post = React.createClass({
-  getInitialState: function() {
-    return {
-      comments: this.props.initialComments
-    };
-  },
+import React from 'react';
+import superagent from 'superagent';
+import {formatDateTime} from '../common/util';
 
-  handleSubmit: function(data) {
-    $.ajax({
-      method: 'POST',
-      url: this.props.commentPostUrl,
-      data: {
-        'comment[name]': data.name,
-        'comment[body]': data.body
-      }
-    }).done(this.handleCommentPostSuccess);
-  },
+export default class Post extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { comments: this.props.initialComments };
+  }
 
-  handleCommentPostSuccess: function(result) {
+  handleSubmit(data) {
+    superagent
+      .post(this.props.commentPostUrl)
+      .send({ comment: data })
+      .set('Content-Type', 'application/json')
+      .set('Accept', 'application/json')
+      .set('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
+      .end((err, res) => {
+        this.handleCommentPostSuccess(res.body);
+      });
+  }
+
+  handleCommentPostSuccess(result) {
     this.setState({ comments: this.state.comments.concat(result) });
-  },
+  }
 
-  render: function() {
-    var post = this.props.post;
-    var comments = this.state.comments;
+  render() {
+    let post = this.props.post;
+    let comments = this.state.comments;
 
     return (
       <div className="post">
         <PostHead title={post.title} created_at={post.created_at} commentLength={comments.length} />
         <PostBody body={post.body} />
         <Comments comments={comments} />
-        <CommentForm onSubmit={this.handleSubmit} />
+        <CommentForm onSubmit={this.handleSubmit.bind(this)} />
       </div>
     );
   }
-});
+}
 
-var PostHead = React.createClass({
-  render: function() {
+class PostHead extends React.Component {
+  render() {
     return (
       <div className="postHead">
         <h2 className="postHead-title">{this.props.title}</h2>
         <div className="postHead-meta">
-          <span className="postHead-date">{Util.formatDateTime(this.props.created_at)}</span>
+          <span className="postHead-date">{formatDateTime(this.props.created_at)}</span>
           <a href="#comments" className="postHead-comments">コメント({this.props.commentLength})</a>
         </div>
       </div>
     );
   }
-});
+}
 
-var PostBody = React.createClass({
-  render: function() {
+class PostBody extends React.Component {
+  render() {
     return (
       <div className="postBody" dangerouslySetInnerHTML={{__html: this.props.body}}/>
     );
   }
-});
+}
 
-var Comments = React.createClass({
-  render: function() {
-    var comments = this.props.comments.map(function(comment) {
+class Comments extends React.Component {
+  render() {
+    let comments = this.props.comments.map(function(comment) {
       return <Comment key={comment.id} comment={comment} />;
     });
 
@@ -70,30 +74,27 @@ var Comments = React.createClass({
       </div>
     );
   }
-});
+}
 
-var Comment = React.createClass({
-  render: function() {
-    var c = this.props.comment;
+class Comment extends React.Component {
+  render() {
+    let c = this.props.comment;
     return (
       <div className="commentItem">
         <div className="commentItem-title">{c.name}</div>
-        <div className="commentItem-date">{Util.formatDateTime(c.created_at)}</div>
+        <div className="commentItem-date">{formatDateTime(c.created_at)}</div>
         <div className="commentItem-body">{c.body}</div>
       </div>
     );
   }
-});
+}
 
-var CommentForm = React.createClass({
-  getDefaultProps: function() {
-    return { onSubmit: function() {} };
-  },
-  handleSubmit: function(e) {
+class CommentForm extends React.Component {
+  handleSubmit(e) {
     e.preventDefault();
 
-    var name = this.refs.name.getDOMNode();
-    var body = this.refs.body.getDOMNode();
+    let name = React.findDOMNode(this.refs.name);
+    let body = React.findDOMNode(this.refs.body);
 
     this.props.onSubmit({
       name: name.value.trim(),
@@ -102,11 +103,12 @@ var CommentForm = React.createClass({
 
     name.value = '';
     body.value = '';
-  },
-  render: function() {
+  }
+
+  render() {
     return (
       <div className="commentForm">
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit.bind(this)}>
           <p><input className="commentForm-name" ref="name" type="text" placeholder="Your Name" /></p>
           <p><textarea className="commentForm-body" ref="body" placeholder="Your Comment"></textarea></p>
           <p><input className="btn" type="submit" /></p>
@@ -114,4 +116,4 @@ var CommentForm = React.createClass({
       </div>
     );
   }
-});
+}
