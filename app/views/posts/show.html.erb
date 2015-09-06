@@ -1,5 +1,5 @@
 <%= react_component('Post', {
   post: @post,
-  initialComments: @post.comments,
+  comments: @post.comments,
   commentPostUrl: post_comments_path(@post),
 }, { prerender: !turbolinks_request? }) %>

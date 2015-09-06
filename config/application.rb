@@ -20,7 +20,7 @@ module ReactRailsExample
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    config.browserify_rails.commandline_options = '-t babelify --extension ".js.jsx" --debug'
+    config.browserify_rails.commandline_options = '-t babelify --extension ".jsx" --debug'
     #config.browserify_rails.force = true
     config.react.server_renderer_options[:files] = ["components.js"]
   end

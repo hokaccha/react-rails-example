@@ -3,8 +3,14 @@ javascript:
     require:
       - core-js
       - react
+      - redux
+      - react-redux
+      - redux-thunk
       - moment
   application:
     external:
       - react
       - moment
+      - redux
+      - react-redux
+      - redux-thunk

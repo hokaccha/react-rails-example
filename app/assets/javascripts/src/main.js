@@ -1,5 +1,5 @@
-import Posts from './components/posts';
-import Post from './components/post';
+import Post from './containers/post';
+import Posts from './containers/posts';
 
-window.Posts = Posts;
 window.Post = Post;
+window.Posts = Posts;
