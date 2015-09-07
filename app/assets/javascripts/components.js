@@ -1,3 +1,3 @@
 window.React = require('react');
-window.Post = require('./src/containers/post');
-window.Posts = require('./src/containers/posts');
+window.PostsIndex = require('./src/containers/posts_index');
+window.PostsShow = require('./src/containers/posts_show');

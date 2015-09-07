@@ -38,7 +38,7 @@ let App = connect(mapStateToProps)(PostsPage);
 let createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 let store = createStoreWithMiddleware(reducers.posts);
 
-export default class Posts extends React.Component {
+export default class PostsIndex extends React.Component {
   componentWillMount() {
     store.dispatch(actions.setInitialPosts(this.props.posts));
   }

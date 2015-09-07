@@ -35,7 +35,7 @@ let App = connect(mapStateToProps)(PostPage);
 let createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 let store = createStoreWithMiddleware(reducers.post);
 
-export default class Post extends React.Component {
+export default class PostsShow extends React.Component {
   componentWillMount() {
     store.dispatch(actions.setInitialData(this.props));
   }

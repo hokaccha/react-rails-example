@@ -1,5 +1,5 @@
-import Post from './containers/post';
-import Posts from './containers/posts';
+import PostsIndex from './containers/posts_index';
+import PostsShow from './containers/posts_show';
 
-window.Post = Post;
-window.Posts = Posts;
+window.PostsIndex = PostsIndex;
+window.PostsShow = PostsShow;
