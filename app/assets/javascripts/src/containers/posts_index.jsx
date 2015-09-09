@@ -1,28 +1,22 @@
 import React from 'react';
 import reduxify from '../utils/reduxify';
 import reducer from '../reducers/posts';
-import { formatDate } from '../utils/date';
+import PostList from '../components/post_list';
+import PostListSearch from '../components/post_list_search';
+import * as actions from '../actions';
 
 class PostIndex extends React.Component {
-  render() {
-    let items = this.props.posts.map(post => {
-      return <PostsItem key={post.id} post={post} />;
-    });
-
-    return <ul className="postList">{items}</ul>;
+  handleChange(searchWord) {
+    let action = actions.updateSearchWord(searchWord);
+    this.props.dispatch(action);
   }
-}
 
-class PostsItem extends React.Component {
   render() {
-    let url = "/posts/" + this.props.post.id;
-    let date = formatDate(this.props.post.created_at);
-
     return (
-      <li className="postListItem">
-        <span className="postListItem-date">{date}</span>
-        <a href={url} className="postListItem-title">{this.props.post.title}</a>
-      </li>
+      <div className="postIndex">
+        <PostListSearch onChange={this.handleChange.bind(this)} />
+        <PostList posts={this.props.posts} searchWord={this.props.searchWord} />
+      </div>
     );
   }
 }

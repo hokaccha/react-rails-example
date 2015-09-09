@@ -1,6 +1,14 @@
 import superagent from 'superagent';
 
 export const POST_COMMENT = 'POST_COMMENT';
+export const UPDATE_SEARCH_WORD = 'UPDATE_SEARCH_WORD';
+
+export function updateSearchWord(searchWord) {
+  return {
+    type: UPDATE_SEARCH_WORD,
+    searchWord,
+  };
+}
 
 export function postComment(comment) {
   return dispatch => {
