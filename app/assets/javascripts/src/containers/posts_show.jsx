@@ -1,15 +1,13 @@
 import React, { PropTypes } from 'react';
-import { createStore, bindActionCreators, applyMiddleware } from 'redux';
-import { Provider, connect } from 'react-redux';
+import reduxify from '../utils/reduxify';
 import PostHead from '../components/post_head';
 import PostBody from '../components/post_body';
 import Comments from '../components/comments';
 import CommentForm from '../components/comment_form';
-import * as reducers from '../reducers';
+import reducer from '../reducers/post';
 import * as actions from '../actions';
-import thunk from 'redux-thunk';
 
-class PostPage extends React.Component {
+class PostShow extends React.Component {
   render() {
     let { post, comments, dispatch } = this.props;
 
@@ -24,27 +22,4 @@ class PostPage extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    post: state.post,
-    comments: state.comments,
-  };
-}
-
-let App = connect(mapStateToProps)(PostPage);
-let createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
-let store = createStoreWithMiddleware(reducers.post);
-
-export default class PostsShow extends React.Component {
-  componentWillMount() {
-    store.dispatch(actions.setInitialData(this.props));
-  }
-
-  render() {
-    return (
-      <Provider store={store}>
-        {() => <App />}
-      </Provider>
-    );
-  }
-}
+export default reduxify(PostShow, reducer);

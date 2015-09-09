@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatDateTime } from '../common/util';
+import { formatDateTime } from '../utils/date';
 
 export default class Comments extends React.Component {
   render() {

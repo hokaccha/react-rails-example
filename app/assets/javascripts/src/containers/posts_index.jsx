@@ -1,12 +1,9 @@
-import React, { PropTypes } from 'react';
-import { createStore, bindActionCreators, applyMiddleware } from 'redux';
-import { Provider, connect } from 'react-redux';
-import * as reducers from '../reducers';
-import * as actions from '../actions';
-import thunk from 'redux-thunk';
-import {formatDate} from '../common/util';
+import React from 'react';
+import reduxify from '../utils/reduxify';
+import reducer from '../reducers/posts';
+import { formatDate } from '../utils/date';
 
-class PostsPage extends React.Component {
+class PostIndex extends React.Component {
   render() {
     let items = this.props.posts.map(post => {
       return <PostsItem key={post.id} post={post} />;
@@ -30,24 +27,4 @@ class PostsItem extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
-  return { posts: state.posts };
-}
-
-let App = connect(mapStateToProps)(PostsPage);
-let createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
-let store = createStoreWithMiddleware(reducers.posts);
-
-export default class PostsIndex extends React.Component {
-  componentWillMount() {
-    store.dispatch(actions.setInitialPosts(this.props.posts));
-  }
-
-  render() {
-    return (
-      <Provider store={store}>
-        {() => <App />}
-      </Provider>
-    );
-  }
-}
+export default reduxify(PostIndex, reducer);

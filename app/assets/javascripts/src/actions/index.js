@@ -1,23 +1,6 @@
 import superagent from 'superagent';
 
-export const SET_INITIAL_POSTS = 'SET_INITIAL_POSTS';
-export const SET_INITIAL_DATA = 'SET_INITIAL_DATA';
 export const POST_COMMENT = 'POST_COMMENT';
-
-export function setInitialPosts(posts) {
-  return {
-    type: SET_INITIAL_POSTS,
-    posts,
-  };
-}
-
-export function setInitialData({ post, comments }) {
-  return {
-    type: SET_INITIAL_DATA,
-    post,
-    comments,
-  };
-}
 
 export function postComment(comment) {
   return dispatch => {
